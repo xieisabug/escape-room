@@ -1,4 +1,5 @@
 import "./styles.css";
+import "antd/dist/antd.css";
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 
 import Scene1Locker from "./page/Scene1Locker";

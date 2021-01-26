@@ -1,4 +1,28 @@
+html,
+body,
+#root {
+  width: 100%;
+  height: 100%;
+  padding: 0;
+  margin: 0;
+}
+
 .App {
   font-family: sans-serif;
   text-align: center;
+}
+
+.scene-locker {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+}
+.login-window {
+  width: 500px;
+}
+
+.login-button {
+  margin-top: 50px;
 }
