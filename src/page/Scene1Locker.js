@@ -8,7 +8,10 @@ export default class Scene1Locker extends React.Component {
       <div className="scene-locker">
         <div className="login-window">
           <Card>
-            <Avatar size={64} icon={<UserOutlined />} />
+            <div style={{ marginBottom: "20px", textAlign: "center" }}>
+              <Avatar size={64} icon={<UserOutlined />} />
+            </div>
+
             <Input placeholder="请输入密码" />
             <div className="login-button">
               <Button type="primary">登录</Button>
