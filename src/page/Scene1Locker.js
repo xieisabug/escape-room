@@ -11,6 +11,11 @@ export default class Scene1Locker extends React.Component {
     };
   }
 
+  // 画笔宽度
+  LINE_WIDTH = 10;
+  // 一笔的长度
+  WIDTH = window.innerHeight / 2;
+
   componentDidMount() {
     /**
      * 背景思路
@@ -34,42 +39,78 @@ export default class Scene1Locker extends React.Component {
       [[true], [true, true], [true], [false, true], [true]] // 9
     ];
 
-    const LINE_WIDTH = 10;
-    const WIDTH = window.innerHeight / 2 - LINE_WIDTH / 2;
-
     let context = document.getElementById("background").getContext("2d");
-    context.lineWidth = LINE_WIDTH;
+    context.lineWidth = this.LINE_WIDTH;
 
-    let number = numberShapeArray[2];
+    let numberArray = this.getRandomNumberArray();
+    console.log(numberArray);
 
+    let transformNumberArray = this.trasformNumberArray(
+      numberArray.map((i) => numberShapeArray[i])
+    );
+
+    transformNumberArray.forEach((i, index) => {
+      this.drawNumber(context, i, index);
+    });
+  }
+
+  trasformNumberArray(numberShapeArray) {
+    for (let i = 0; i < 5; i++) {
+      let n = Math.floor(Math.random() * 10);
+      while (n--) {
+        let temp = numberShapeArray[0];
+        for (let j = 0; j < numberShapeArray.length; j++) {
+          if (j !== numberShapeArray.length - 1) {
+            numberShapeArray[j] = numberShapeArray[j + 1];
+          } else {
+            numberShapeArray[j] = temp;
+          }
+        }
+      }
+    }
+    return numberShapeArray;
+  }
+
+  getRandomNumberArray() {
+    let arr = [];
+    for (let i = 0; i < 6; i++) {
+      let n = Math.floor(10 * Math.random());
+      arr.push(n);
+    }
+    return arr;
+  }
+
+  drawNumber(context, number, index) {
     context.beginPath();
+    // 每个字在canvas的偏移量
+    let offsetWidth = index * this.WIDTH + index * (this.LINE_WIDTH + 50);
     if (number[0][0]) {
-      context.moveTo(0, 0);
-      context.lineTo(WIDTH, 0);
+      context.moveTo(offsetWidth, 0);
+      context.lineTo(offsetWidth + this.WIDTH, 0);
     }
     if (number[1][0]) {
-      context.moveTo(0, 0);
-      context.lineTo(0, WIDTH);
+      context.moveTo(offsetWidth, 0);
+      context.lineTo(offsetWidth, this.WIDTH);
     }
     if (number[1][1]) {
-      context.moveTo(WIDTH, 0);
-      context.lineTo(WIDTH, WIDTH);
+      context.moveTo(offsetWidth + this.WIDTH, 0);
+      context.lineTo(offsetWidth + this.WIDTH, this.WIDTH);
     }
     if (number[2][0]) {
-      context.moveTo(0, WIDTH);
-      context.lineTo(WIDTH, WIDTH);
+      context.moveTo(offsetWidth, this.WIDTH);
+      context.lineTo(offsetWidth + this.WIDTH, this.WIDTH);
     }
     if (number[3][0]) {
-      context.moveTo(0, WIDTH);
-      context.lineTo(0, 2 * WIDTH);
+      context.moveTo(offsetWidth, this.WIDTH);
+      context.lineTo(offsetWidth, 2 * this.WIDTH);
     }
     if (number[3][1]) {
-      context.moveTo(WIDTH, WIDTH);
-      context.lineTo(WIDTH, 2 * WIDTH);
+      context.moveTo(offsetWidth + this.WIDTH, this.WIDTH);
+      context.lineTo(offsetWidth + this.WIDTH, 2 * this.WIDTH);
     }
     if (number[4][0]) {
-      context.moveTo(0, 2 * WIDTH);
-      context.lineTo(WIDTH, 2 * WIDTH);
+      context.moveTo(offsetWidth, 2 * this.WIDTH);
+      context.lineTo(offsetWidth + this.WIDTH, 2 * this.WIDTH);
     }
 
     context.stroke();
