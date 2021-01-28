@@ -54,16 +54,22 @@ export default class Scene1Locker extends React.Component {
     });
   }
 
+  /**
+   * 数字移位
+   */
   trasformNumberArray(numberShapeArray) {
+    // 数字的5个部分，分开移位
     for (let i = 0; i < 5; i++) {
-      let n = Math.floor(Math.random() * 10);
+      // 移动多少次，没必要超过5次，超过5次之会增加效率开销
+      let n = Math.floor(Math.random() * 5);
       while (n--) {
-        let temp = numberShapeArray[0];
-        for (let j = 0; j < numberShapeArray.length; j++) {
-          if (j !== numberShapeArray.length - 1) {
-            numberShapeArray[j] = numberShapeArray[j + 1];
+        // 循环移位
+        let temp = numberShapeArray[i][0];
+        for (let j = 0; j < numberShapeArray[i].length; j++) {
+          if (j !== numberShapeArray[i].length - 1) {
+            numberShapeArray[i][j] = numberShapeArray[i][j + 1];
           } else {
-            numberShapeArray[j] = temp;
+            numberShapeArray[i][j] = temp;
           }
         }
       }
@@ -71,6 +77,9 @@ export default class Scene1Locker extends React.Component {
     return numberShapeArray;
   }
 
+  /**
+   * 获取6位随机数字
+   */
   getRandomNumberArray() {
     let arr = [];
     for (let i = 0; i < 6; i++) {
@@ -130,7 +139,7 @@ export default class Scene1Locker extends React.Component {
               <Avatar size={64} icon={<UserOutlined />} />
             </div>
 
-            <Input placeholder="请输入密码" />
+            <Input placeholder="请输入6位密码" />
             <div className="login-button">
               <Button type="primary">登录</Button>
             </div>
