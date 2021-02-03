@@ -5,6 +5,7 @@ body,
   height: 100%;
   padding: 0;
   margin: 0;
+  overflow: hidden;
 }
 
 .App {
@@ -18,6 +19,7 @@ body,
   justify-content: center;
   width: 100%;
   height: 100%;
+  overflow: hidden;
 }
 .login-window {
   width: 500px;
@@ -30,4 +32,21 @@ body,
 
 .scene-locker > #background {
   position: absolute;
+  left: 0;
+  top: 0;
+  animation: scroll-move 5s infinite;
+}
+
+@keyframes scroll-move {
+  0% {
+    left: 20px;
+  }
+
+  50% {
+    left: calc(-100vh - 250px);
+  }
+
+  100% {
+    left: 20px;
+  }
 }

@@ -1,12 +1,16 @@
 import * as React from "react";
-import { Button, Card, Input, Avatar } from "antd";
-import { UserOutlined } from "@ant-design/icons";
+import { Button, Card, Input, Avatar, notification } from "antd";
+import {
+  UserOutlined,
+  SmileOutlined,
+  ExclamationCircleOutlined
+} from "@ant-design/icons";
 
 export default class Scene1Locker extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      canvasWidth: window.innerWidth,
+      canvasWidth: (this.WIDTH + this.LINE_WIDTH + 50) * 6,
       canvasHeight: window.innerHeight
     };
   }
@@ -14,7 +18,9 @@ export default class Scene1Locker extends React.Component {
   // 画笔宽度
   LINE_WIDTH = 10;
   // 一笔的长度
-  WIDTH = window.innerHeight / 2;
+  WIDTH = window.innerHeight / 2 - this.LINE_WIDTH;
+
+  canvas = null;
 
   componentDidMount() {
     /**
@@ -43,10 +49,14 @@ export default class Scene1Locker extends React.Component {
     context.lineWidth = this.LINE_WIDTH;
 
     let numberArray = this.getRandomNumberArray();
+    this.setState({
+      currentPassword: numberArray.join("")
+    });
     console.log(numberArray);
 
     let transformNumberArray = this.trasformNumberArray(
-      numberArray.map((i) => numberShapeArray[i])
+      numberArray.map((i) => numberShapeArray[i]),
+      true
     );
 
     transformNumberArray.forEach((i, index) => {
@@ -57,24 +67,60 @@ export default class Scene1Locker extends React.Component {
   /**
    * 数字移位
    */
-  trasformNumberArray(numberShapeArray) {
-    // 数字的5个部分，分开移位
-    for (let i = 0; i < 5; i++) {
-      // 移动多少次，没必要超过5次，超过5次之会增加效率开销
-      let n = Math.floor(Math.random() * 5);
-      while (n--) {
-        // 循环移位
-        let temp = numberShapeArray[i][0];
-        for (let j = 0; j < numberShapeArray[i].length; j++) {
-          if (j !== numberShapeArray[i].length - 1) {
-            numberShapeArray[i][j] = numberShapeArray[i][j + 1];
-          } else {
-            numberShapeArray[i][j] = temp;
+  trasformNumberArray(trasformNumberShapeArray, easy) {
+    if (easy) {
+      // 简单难度最多只移动3步
+      // 数字的2个部分，分开移位
+      let l = Math.floor(Math.random() * 3);
+      while (l === 0) {
+        // 保证肯定被移动
+        l = Math.floor(Math.random() * 3);
+      }
+
+      // 遍历位置，因为是简单难度，所以只移动上面的三个位置，并且上面的三个位置移动相同的偏移量
+      for (let s = 0; s < 3; s++) {
+        // 遍历数字
+        let n = l;
+        while (n--) {
+          let temp = trasformNumberShapeArray[0][s];
+          for (let i = 0; i < 6; i++) {
+            // 循环移位
+            if (i !== 5) {
+              trasformNumberShapeArray[i][s] =
+                trasformNumberShapeArray[i + 1][s];
+            } else {
+              trasformNumberShapeArray[5][s] = temp;
+            }
           }
         }
       }
+
+      return trasformNumberShapeArray;
+    } else {
+      // 遍历位置，5个位置都移动
+      for (let s = 0; s < 5; s++) {
+        // 遍历数字
+        let n = Math.floor(Math.random() * 5);
+        while (n === 0) {
+          // 保证肯定被移动
+          n = Math.floor(Math.random() * 5);
+        }
+        while (n--) {
+          let temp = trasformNumberShapeArray[0][s];
+          for (let i = 0; i < 6; i++) {
+            // 循环移位
+            if (i !== 5) {
+              trasformNumberShapeArray[i][s] =
+                trasformNumberShapeArray[i + 1][s];
+            } else {
+              trasformNumberShapeArray[5][s] = temp;
+            }
+          }
+        }
+      }
+
+      return trasformNumberShapeArray;
     }
-    return numberShapeArray;
   }
 
   /**
@@ -92,7 +138,8 @@ export default class Scene1Locker extends React.Component {
   drawNumber(context, number, index) {
     context.beginPath();
     // 每个字在canvas的偏移量
-    let offsetWidth = index * this.WIDTH + index * (this.LINE_WIDTH + 50);
+    let offsetWidth = index * (this.WIDTH + this.LINE_WIDTH + 50);
+
     if (number[0][0]) {
       context.moveTo(offsetWidth, 0);
       context.lineTo(offsetWidth + this.WIDTH, 0);
@@ -125,6 +172,28 @@ export default class Scene1Locker extends React.Component {
     context.stroke();
   }
 
+  passwordChange = (event) => {
+    this.setState({
+      password: event.target.value
+    });
+  };
+
+  login = () => {
+    if ("" + this.state.password === this.state.currentPassword) {
+      notification.open({
+        message: "登录成功",
+        description: "恭喜您登录成功，即将进入系统，请稍等",
+        icon: <SmileOutlined style={{ color: "#108ee9" }} />
+      });
+    } else {
+      notification.open({
+        message: "登录失败",
+        description: "密码错误，请重试",
+        icon: <ExclamationCircleOutlined style={{ color: "#ff0000" }} />
+      });
+    }
+  };
+
   render() {
     return (
       <div className="scene-locker">
@@ -139,9 +208,15 @@ export default class Scene1Locker extends React.Component {
               <Avatar size={64} icon={<UserOutlined />} />
             </div>
 
-            <Input placeholder="请输入6位密码" />
+            <Input
+              placeholder="请输入6位密码"
+              value={this.state.password}
+              onChange={this.passwordChange}
+            />
             <div className="login-button">
-              <Button type="primary">登录</Button>
+              <Button type="primary" onClick={this.login}>
+                登录
+              </Button>
             </div>
           </Card>
         </div>
