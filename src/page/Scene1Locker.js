@@ -1,4 +1,5 @@
 import * as React from "react";
+import classnames from "classnames";
 import { Button, Card, Input, Avatar, notification } from "antd";
 import {
   UserOutlined,
@@ -11,7 +12,8 @@ export default class Scene1Locker extends React.Component {
     super(props);
     this.state = {
       canvasWidth: (this.WIDTH + this.LINE_WIDTH + 50) * 6,
-      canvasHeight: window.innerHeight
+      canvasHeight: window.innerHeight,
+      isSuccess: false
     };
   }
 
@@ -54,7 +56,7 @@ export default class Scene1Locker extends React.Component {
     });
     console.log(numberArray);
 
-    let transformNumberArray = this.trasformNumberArray(
+    let transformNumberArray = this.transformNumberArray(
       numberArray.map((i) => numberShapeArray[i]),
       true
     );
@@ -67,7 +69,7 @@ export default class Scene1Locker extends React.Component {
   /**
    * 数字移位
    */
-  trasformNumberArray(trasformNumberShapeArray, easy) {
+  transformNumberArray(transformNumberShapeArray, easy) {
     if (easy) {
       // 简单难度最多只移动3步
       // 数字的2个部分，分开移位
@@ -82,20 +84,20 @@ export default class Scene1Locker extends React.Component {
         // 遍历数字
         let n = l;
         while (n--) {
-          let temp = trasformNumberShapeArray[0][s];
+          let temp = transformNumberShapeArray[0][s];
           for (let i = 0; i < 6; i++) {
             // 循环移位
             if (i !== 5) {
-              trasformNumberShapeArray[i][s] =
-                trasformNumberShapeArray[i + 1][s];
+              transformNumberShapeArray[i][s] =
+                transformNumberShapeArray[i + 1][s];
             } else {
-              trasformNumberShapeArray[5][s] = temp;
+              transformNumberShapeArray[5][s] = temp;
             }
           }
         }
       }
 
-      return trasformNumberShapeArray;
+      return transformNumberShapeArray;
     } else {
       // 遍历位置，5个位置都移动
       for (let s = 0; s < 5; s++) {
@@ -106,20 +108,20 @@ export default class Scene1Locker extends React.Component {
           n = Math.floor(Math.random() * 5);
         }
         while (n--) {
-          let temp = trasformNumberShapeArray[0][s];
+          let temp = transformNumberShapeArray[0][s];
           for (let i = 0; i < 6; i++) {
             // 循环移位
             if (i !== 5) {
-              trasformNumberShapeArray[i][s] =
-                trasformNumberShapeArray[i + 1][s];
+              transformNumberShapeArray[i][s] =
+                transformNumberShapeArray[i + 1][s];
             } else {
-              trasformNumberShapeArray[5][s] = temp;
+              transformNumberShapeArray[5][s] = temp;
             }
           }
         }
       }
 
-      return trasformNumberShapeArray;
+      return transformNumberShapeArray;
     }
   }
 
@@ -185,6 +187,9 @@ export default class Scene1Locker extends React.Component {
         description: "恭喜您登录成功，即将进入系统，请稍等",
         icon: <SmileOutlined style={{ color: "#108ee9" }} />
       });
+      this.setState({
+        isSuccess: true
+      })
     } else {
       notification.open({
         message: "登录失败",
@@ -195,6 +200,10 @@ export default class Scene1Locker extends React.Component {
   };
 
   render() {
+    let loginWindow = classnames({
+      "login-window": true,
+      "hidden": this.state.isSuccess
+    })
     return (
       <div className="scene-locker">
         <canvas
@@ -202,7 +211,7 @@ export default class Scene1Locker extends React.Component {
           width={this.state.canvasWidth}
           height={this.state.canvasHeight}
         />
-        <div className="login-window">
+        <div className={loginWindow}>
           <Card>
             <div style={{ marginBottom: "20px", textAlign: "center" }}>
               <Avatar size={64} icon={<UserOutlined />} />
