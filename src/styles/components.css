@@ -1,0 +1,23 @@
+.desktop {
+    display: flex;
+    padding: 50px;
+}
+
+.program {
+    width: 100px;
+    height: 100px;
+}
+
+.icon-container {
+    text-align: center;
+    cursor: pointer;
+    transition: background-color 0.2s, color 0.5s;
+    user-select: none;
+}
+.icon-container:hover {
+    color: #fff;
+    background-color: #1890ff;
+}
+.icon-container .icon{
+    font-size: 36px;
+}

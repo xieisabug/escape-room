@@ -1,10 +1,15 @@
-import "./styles.css";
+import "./styles/styles.css";
+import "./styles/components.css";
 import "antd/dist/antd.css";
 import React from "react";
 import {BrowserRouter as Router, Switch, Route} from "react-router-dom";
 
 import Scene1Locker from "./page/Scene1Locker";
 import Scene2Desktop from "./page/Scene2Desktop";
+
+import {IdGenerator} from "./Utils";
+
+IdGenerator.init();
 
 export default function App() {
     return (
