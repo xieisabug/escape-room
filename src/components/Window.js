@@ -33,8 +33,15 @@ export default function Window(props) {
         isClick = false;
     }
 
+    const attrMap = props.component.attrMap;
+
+    let containerStyle = attrMap ? {
+        width: attrMap.width ? (attrMap.width + "px") : null,
+        height: attrMap.height ? (attrMap.height + "px") : null
+    } : {};
+
     return (
-        <div className="window" ref={container} style={{width: props.attrMap.width + "px"}}>
+        <div className="window" ref={container} style={containerStyle}>
             <div className="window-title" onMouseDown={mouseDown} onMouseMove={mouseMove} onMouseUp={mouseUp} onMouseOut={mouseOut}>
                 <div>{props.component.title()}</div>
                 <div>

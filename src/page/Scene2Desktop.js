@@ -11,7 +11,12 @@ export default class Scene2Desktop extends React.Component {
         super(props);
         this.state = {
             programs: [
-                TextEditor({id: IdGenerator.instance.getKey(), text: "请阅读我"})
+                TextEditor({
+                    id: IdGenerator.instance.getKey(),
+                    text: "请阅读我",
+                    width: 400,
+                    height: 500
+                })
             ],
             openPrograms: []
         };
@@ -34,7 +39,7 @@ export default class Scene2Desktop extends React.Component {
             <Desktop programs={this.state.programs} bindClick={this.openProgram} />
             {
                 this.state.openPrograms.map(i => {
-                    return <Window component={i}/>
+                    return <Window key={i.attrMap.id} component={i}/>
                 })
             }
         </div>
