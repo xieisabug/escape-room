@@ -21,3 +21,20 @@
 .icon-container .icon{
     font-size: 36px;
 }
+
+.window {
+    position: absolute;
+    min-width: 300px;
+    min-height: 200px;
+    border: 1px solid #ccc;
+}
+
+.window .window-title {
+    width: 100%;
+    height: 30px;
+    border-bottom: 1px solid #ccc;
+    cursor: pointer;
+    line-height: 30px;
+    padding: 0 10px;
+    user-select: none;
+}

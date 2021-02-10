@@ -14,7 +14,13 @@ export default function(attrMap) {
             />;
         },
         title() {
-            return <span>文档</span>
+            return <span>{attrMap.text ? attrMap.text : this.name}</span>
+        },
+        menu() {
+            return null;
+        },
+        render() {
+            return null;
         }
     }
 }
