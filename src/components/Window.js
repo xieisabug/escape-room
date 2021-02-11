@@ -1,4 +1,4 @@
-import React, { useState, useRef } from "react";
+import React, { useEffect, useRef } from "react";
 
 export default function Window(props) {
     if (!props.component) {
@@ -39,6 +39,11 @@ export default function Window(props) {
         width: attrMap.width ? (attrMap.width + "px") : null,
         height: attrMap.height ? (attrMap.height + "px") : null
     } : {};
+
+    useEffect(() => {
+        container.current.style.left = '200px';
+        container.current.style.top  = '200px';
+    }, [container]);
 
     return (
         <div className="window" ref={container} style={containerStyle}>
