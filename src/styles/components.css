@@ -9,6 +9,7 @@
 }
 
 .icon-container {
+    min-width: 100px;
     text-align: center;
     cursor: pointer;
     transition: background-color 0.2s, color 0.5s;
@@ -40,7 +41,25 @@
     line-height: 30px;
     padding: 0 10px;
     user-select: none;
+    display: flex;
+    justify-content: space-between;
+    background: white;
 }
 .window .window-content {
     flex: 1;
+}
+
+.file-manager {
+    height: 100%;
+    width: 100%;
+}
+
+.file-manager-function {
+    font-size: 36px;
+    padding: 0 20px;
+    border-bottom: 1px solid #ccc;
+}
+
+.file-manager-program-list {
+    display: flex;
 }

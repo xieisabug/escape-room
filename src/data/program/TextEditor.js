@@ -20,8 +20,7 @@ export default function(attrMap) {
             return null;
         },
         render() {
-            return <textarea style={{width: "100%", height: "100%", resize: "none"}}>
-                {attrMap.initContent}
+            return <textarea style={{width: "100%", height: "100%", resize: "none"}} defaultValue={attrMap.initContent}>
             </textarea>;
         }
     }

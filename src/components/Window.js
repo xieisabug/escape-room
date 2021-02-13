@@ -1,4 +1,7 @@
 import React, { useEffect, useRef } from "react";
+import {
+    CloseOutlined
+} from "@ant-design/icons";
 
 export default function Window(props) {
     if (!props.component) {
@@ -45,11 +48,22 @@ export default function Window(props) {
         container.current.style.top  = '200px';
     }, [container]);
 
+    function onCloseClick() {
+        props.onCloseClick(props.component);
+
+        if (props.component.attrMap && props.component.attrMap.onClose) {
+            props.component.attrMap.onClose();
+        }
+    }
+
     return (
         <div className="window" ref={container} style={containerStyle}>
             <div className="window-title" onMouseDown={mouseDown} onMouseMove={mouseMove} onMouseUp={mouseUp} onMouseOut={mouseOut}>
                 <div>{props.component.title()}</div>
                 <div>
+                    <div onClick={onCloseClick}>
+                        <CloseOutlined />
+                    </div>
                 </div>
             </div>
             <div className="window-menu">{props.component.menu()}</div>
