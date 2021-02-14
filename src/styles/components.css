@@ -62,4 +62,7 @@
 
 .file-manager-program-list {
     display: flex;
+    padding: 10px;
+    overflow-x: hidden;
+    overflow-y: auto;
 }

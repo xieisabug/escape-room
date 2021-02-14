@@ -43,10 +43,8 @@ export default function Window(props) {
         height: attrMap.height ? (attrMap.height + "px") : null
     } : {};
 
-    useEffect(() => {
-        container.current.style.left = '200px';
-        container.current.style.top  = '200px';
-    }, [container]);
+    containerStyle.left = '200px';
+    containerStyle.top  = '200px';
 
     function onCloseClick() {
         props.onCloseClick(props.component);
