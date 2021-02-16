@@ -60,9 +60,25 @@
     border-bottom: 1px solid #ccc;
 }
 
+.file-manager-navigator {
+    border-bottom: 1px solid #ccc;
+    padding: 10px;
+}
+
+.file-manager-navigator-item {
+    margin-right: 5px;
+}
+.file-manager-navigator-item:after {
+    content: " -> "
+}
+.file-manager-navigator-item:last-child:after {
+    content: ""
+}
+
 .file-manager-program-list {
     display: flex;
     padding: 10px;
     overflow-x: hidden;
     overflow-y: auto;
+    flex-wrap: wrap;
 }

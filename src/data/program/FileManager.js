@@ -6,7 +6,6 @@ import {
     LeftCircleOutlined,
     ContainerOutlined
 } from "@ant-design/icons";
-import classnames from "classnames";
 import {IdGenerator} from "../../Utils";
 
 function FileManager(props) {
@@ -15,19 +14,57 @@ function FileManager(props) {
 
     const [files, setFiles] = useState(props.fileSystem);
     const [currentDirectory, setCurrentDirectory] = useState(null);
+    const [fileNavigator, setFileNavigator] = useState([]);
 
     function getNextLevelFiles(f) {
-        setCurrentDirectory(f);
-        setFiles(f.children);
+        let slice = fileNavigator.slice();
+        slice.push(f.name);
+        setFileNavigator(slice);
+        if (f.getChildren) {
+            if (!f.isVirtual) {
+                setCurrentDirectory(f);
+            }
+            setFiles(f.getChildren(f));
+        } else {
+            setCurrentDirectory(f);
+            setFiles(f.children);
+        }
     }
 
     function backToParent() {
         if (currentDirectory) {
             if (currentDirectory.parent) {
-                setCurrentDirectory(currentDirectory.parent);
-                setFiles(currentDirectory.parent.children);
+                let slice = fileNavigator.splice(fileNavigator.length - 1, 1);
+                setFileNavigator(slice);
+                if (currentDirectory.getParent) {
+                    let parent = currentDirectory.getParent();
+                    if (parent) {
+                        setFiles(parent);
+                    } else {
+                        setCurrentDirectory(currentDirectory.parent);
+                        setFiles(currentDirectory.parent.children);
+                    }
+                } else {
+                    setCurrentDirectory(currentDirectory.parent);
+                    setFiles(currentDirectory.parent.children);
+                }
             } else {
-                setFiles(props.fileSystem);
+                if (currentDirectory.getParent) {
+                    let parent = currentDirectory.getParent();
+                    if (parent) {
+                        let slice1 = fileNavigator.slice();
+                        slice1.splice(fileNavigator.length - 1, 1);
+                        setFileNavigator(slice1);
+                        setFiles(parent);
+                    } else {
+                        setFileNavigator([]);
+                        setFiles(props.fileSystem);
+                    }
+                } else {
+                    setFileNavigator([]);
+                    setFiles(props.fileSystem);
+                }
+
             }
         }
     }
@@ -56,6 +93,11 @@ function FileManager(props) {
             <div onClick={backToParent}>
                 <LeftCircleOutlined />
             </div>
+        </div>
+        <div className="file-manager-navigator">
+            {fileNavigator.map(i => {
+                return <span className="file-manager-navigator-item">{i}</span>
+            })}
         </div>
         <div className="file-manager-program-list">
             {files.map(f => {

@@ -17,3 +17,15 @@ export class IdGenerator {
         return this.idKey++;
     }
 }
+
+export class GlobalCache {
+    static cache = {};
+
+    static save(key, value) {
+        caches[key] = value;
+    }
+
+    static get(key) {
+        return caches[key];
+    }
+}

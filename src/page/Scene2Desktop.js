@@ -2,16 +2,99 @@ import * as React from "react";
 import Desktop from "../components/Desktop";
 import Window from "../components/Window";
 
-import {IdGenerator} from "../Utils";
+import {GlobalCache, IdGenerator} from "../Utils";
 import TextEditor from "../data/program/TextEditor";
 import FileManager from "../data/program/FileManager";
 
-import diary from "../data/diary"
+import diary from "../data/diary";
 
 export default class Scene2Desktop extends React.Component {
 
     constructor(props) {
         super(props);
+
+        this.init();
+
+        // 动态获取私密文档的子文件夹，不然26的6次方数据太大
+        let getChildren = function(f) {
+            if (f.name === '私密文档') {
+                return 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('').map(i => {
+                    return {
+                        name: i,
+                        type: "d",
+                        isVirtual: true,
+                        children: [],
+                        getChildren,
+                        getParent
+                    }
+                })
+            }
+
+            let directorySecret = GlobalCache.get("directorySecret");
+
+            if (!directorySecret) {
+                directorySecret = '';
+            }
+
+            directorySecret += f.name;
+            GlobalCache.save('directorySecret', directorySecret);
+
+            if (directorySecret.length < 6) {
+                return 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('').map(i => {
+                    return {
+                        name: i,
+                        type: "d",
+                        isVirtual: true,
+                        children: [],
+                        getChildren,
+                        getParent
+                    }
+                })
+            } else {
+                let directorySecretResult = GlobalCache.get("directorySecretResult");
+                if (directorySecret === directorySecretResult) {
+                    return [
+                        {
+                            name: "深入理解计算机系统",
+                            type: "text-editor",
+                            program: TextEditor({
+                                id: IdGenerator.instance.getKey(),
+                                text: "深入理解计算机系统",
+                                width: 400,
+                                height: 500,
+                                initContent: "",
+                            })
+                        }
+                    ]
+                } else {
+                    return [];
+                }
+            }
+        };
+
+        // 因为子文件是动态生成的，所以取父文件夹也需要动态获取
+        let getParent = function() {
+            let directorySecret = GlobalCache.get("directorySecret");
+
+            if (!directorySecret.length) {
+                return null;
+            }
+
+            directorySecret = directorySecret.substring(0, directorySecret.length - 1);
+            GlobalCache.save("directorySecret", directorySecret);
+
+            return 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('').map(i => {
+                return {
+                    name: i,
+                    type: "d",
+                    isVirtual: true,
+                    children: [],
+                    getChildren,
+                    getParent
+                }
+            })
+        }
+
         this.state = {
             programs: [
                 TextEditor({
@@ -72,24 +155,32 @@ export default class Scene2Desktop extends React.Component {
                         {
                             name: "私密文档",
                             type: "d",
-                            children: [
-                                {
-                                    name: "a",
-                                    type: "d",
-                                    children: []
-                                },
-                                {
-                                    name: "b",
-                                    type: "d",
-                                    children: []
-                                }
-                            ]
+                            children: [],
+                            getChildren,
+                            getParent
                         }
                     ]
                 })
             ],
             openPrograms: []
         };
+    }
+
+    init = () => {
+        // 初始化文件夹私密文件的答案，随机6位密码
+        let characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+
+        function getOne() {
+            let index = Math.floor(Math.random() * 26);
+            return characters[index];
+        }
+
+        let result = '';
+        for (let i = 0; i < 6; i++) {
+            result += getOne();
+        }
+
+        GlobalCache.save("directorySecretResult", result);
     }
 
     openProgram = (program) => {
