@@ -6,6 +6,8 @@ import {IdGenerator} from "../Utils";
 import TextEditor from "../data/program/TextEditor";
 import FileManager from "../data/program/FileManager";
 
+import diary from "../data/diary"
+
 export default class Scene2Desktop extends React.Component {
 
     constructor(props) {
@@ -65,7 +67,7 @@ export default class Scene2Desktop extends React.Component {
                         {
                             name: "日记",
                             type: "d",
-                            children: []
+                            children: diary
                         },
                         {
                             name: "私密文档",

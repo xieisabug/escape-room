@@ -1,5 +1,8 @@
 import React, {StrictMode} from "react";
 import ReactDOM from "react-dom";
+import {IdGenerator} from "./Utils";
+
+IdGenerator.init();
 
 import App from "./App";
 
